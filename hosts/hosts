@@ -1,0 +1,12 @@
+master ansible_host=172.20.239.114 ansible_user=root ansible_password=vagrant ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+worker1 ansible_host=172.20.225.226 ansible_user=root ansible_password=vagrant ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+
+[masters]
+master
+
+[workers]
+worker1
+
+[all:vars]
+ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null'

@@ -1,0 +1,30 @@
+# Kubernetes
+kube_version: v1.19.2
+# Network implementation('flannel', 'calico', 'canal')
+network: flannel
+
+#Service and pods CIDR
+service_cidr: 10.96.0.0/12
+pod_network_cidr: 10.244.0.0/16
+service-dns-domain: cluster.local
+
+#Kube token for join comand
+#token:
+
+
+systemd_dir: /lib/systemd/system
+system_env_dir: /etc/sysconfig
+network_dir: /etc/kubernetes/network
+kubeadmin_config: /etc/kubernetes/admin.conf
+kube_addon_dir: /etc/kubernetes/addon
+
+# Additional feature to install
+enable_dashboard: false
+enable_monitoring: false
+enable_helm: yes
+
+# Container runtimes ('containerd', 'crio')
+container_runtime: containerd
+
+#helm version
+helm_version: "v3.5.0"

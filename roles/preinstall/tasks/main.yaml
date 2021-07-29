@@ -1,0 +1,50 @@
+- name: Install yum packages
+  yum: 
+    name: "{{packages}}"
+    state: latest
+  vars:
+    packages:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: Stop and disable firewalld.
+  service:
+    name: firewalld
+    state: stopped
+    enabled: False
+
+- name: Disable swap for current session
+  command: swapoff -a
+  become: true
+
+- name: Disable swap permanently, persist reboots
+  replace:
+    path: /etc/fstab
+    regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+    replace: '#\1\2\3swap\4'
+    backup: yes
+
+- name: disable SELinux
+  command: setenforce 0
+
+- name: disable SELinux on reboot
+  selinux:
+    state: disabled
+
+- name: Ensure br_netfilter is enabled.
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: 1
+    state: present
+
+- name: ensure net.bridge.bridge-nf-call-iptables is set to 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present

@@ -1,0 +1,59 @@
+- name: Remove docker packages
+  yum: 
+    name: "{{packages}}"
+    state: absent
+  vars:
+    packages:
+    - docker
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-engine
+
+- name: Add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docer-ce.repo
+
+- name: Install Docker
+  yum:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+       
+- name: Install Docker CE Cli
+  yum:
+    name: docker-ce-cli
+    state: latest
+    update_cache: yes
+
+- name: Install containerd.io
+  yum:
+    name: containerd.io
+    state: latest
+    update_cache: yes
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+   
+- name: Start Containerd service
+  service:
+    name: containerd
+    state: started
+    enabled: yes
+
+- name: Create Docker system user group
+  group:
+    name: docker
+    state: present
+   
+- name: Add vagrant user to docker group
+  user:
+    name: vagrant
+    group: docker
