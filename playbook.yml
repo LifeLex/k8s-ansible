@@ -1,0 +1,54 @@
+- name: Preinstall tasks
+  hosts: all
+  become: yes
+  roles: 
+    - preinstall
+    - installCRI
+    - kubeadm
+  tags: 
+  - preinstall
+
+- name: Add Kubectl to master nodes
+  hosts: masters
+  become: yes
+  roles:
+   - installkubectl
+
+- name: Cluster Initialisation
+  hosts: masters
+  become: yes
+  roles: 
+    - initcluster
+    - installCNI
+  tags:
+   - initcluster
+
+- name: Get Token for join commmand
+  hosts: masters
+  become: yes
+  roles:
+   - getjointoken
+  tags:
+  - joincluster
+
+- name: Worker nodes join cluster
+  hosts: workers
+  become: yes
+  roles:
+   - joincluster
+  tags:
+  - joincluster
+
+- name: Install addons in the cluster
+#  become: yes
+  hosts: masters
+  roles:
+    # - { role: installDashboard, when: enable_dashboard }
+    # - { role: installMonitoring, when: enable_monitoring }
+    # - { role: installIngressTraefik, when: enable_traefik }
+    # - { role: installIngressNginx, when: enable_nginx }
+    # - { role: installMetalLB, when: enable_metalLb }
+    - { role: installArgoCD, when: enable_argocd}
+    - { role: installHelm, when: enable_helm }
+  tags: 
+  - installAddons

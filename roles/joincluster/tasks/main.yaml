@@ -1,3 +1,4 @@
+#FIXME: fix the join command since group master doesnt exist anymore
 - name: join cluster
   become: yes
   shell: "{{ hostvars['master'].join_command }} --ignore-preflight-errors all  >> node_joined.txt"

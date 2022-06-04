@@ -1,0 +1,32 @@
+- name: install openshift for kubernetes collection ansible
+  pip:
+    name: openshift
+    executable: pip3
+    extra_args: --user
+
+- name: install kubernetes module python
+  pip:
+    name: kubernetes
+    executable: pip3
+    extra_args: --user
+#- name: Create a k8s namespace
+#  kubernetes.core.k8s:
+#    name: argocd
+#    api_version: v1
+#    kind: Namespace
+#    state: present
+- name: Create a k8s namespace
+  shell: kubectl create namespace argocd
+
+- name: Download argocd manifest to the cluster
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml
+    dest: ~/argocd.yaml
+    mode: '0664'
+
+#- name: Apply argoCD manifest
+#  kubernetes.core.k8s:
+#    state: present
+#    src: ~/argocd.yaml
+- name: Apply argoCD manifest
+  shell: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml

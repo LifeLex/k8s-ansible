@@ -21,10 +21,11 @@ kube_addon_dir: /etc/kubernetes/addon
 # Additional feature to install
 enable_dashboard: false
 enable_monitoring: false
-enable_helm: yes
+enable_helm: true
+enable_argocd: true
 
 # Container runtimes ('containerd', 'crio')
 container_runtime: containerd
 
 #helm version
-helm_version: "v3.5.0"
+helm_version: v3.6.0
